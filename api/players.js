@@ -60,7 +60,7 @@ router.get('/players/:id', (req, res) => {
       res.json(players)
     })
     .catch(err => {
-      console.log(err);
+      res.status(500).send(err);
     })
 })
 
@@ -70,7 +70,7 @@ router.post('/players', (req, res) => {
       res.json(player);
     })
     .catch(err => {
-      console.log(err);
+      res.status(500).send(err);
     })
 })
 
@@ -80,11 +80,10 @@ router.put('/players/:id', (req, res) => {
   Player.query()
     .patchAndFetchById(id, req.body)
     .then(player => {
-      console.log(player);
       res.json(player);
     })
     .catch(err => {
-      console.log(err);
+      res.status(500).send(err);
     })
 })
 
@@ -94,11 +93,10 @@ router.delete('/players/:id', (req, res) => {
   Player.query()
     .deleteById(id)
     .then(player => {
-      console.log(player);
       res.json(player);
     })
     .catch(err => {
-      console.log(err);
+      res.status(500).send(err);
     })
 })
 
