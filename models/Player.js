@@ -10,7 +10,21 @@ class Player extends Model {
 
   static get idColumn() {
     return 'id';
-  }  
+  }
+
+  static get relationMappings() {
+    const Team = require('./Team');
+    return {
+      writer: {
+        relation: Model.BelongsToOneRelation,
+        modelClass: Team,
+        join: {
+          from: 'players.team',
+          to: 'teams.id'
+        }
+      }
+    }
+  }
 }
 
 module.exports = Player;
