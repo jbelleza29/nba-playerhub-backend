@@ -11,7 +11,7 @@ router.get('/players', async (req, res) => {
   let order = req.query.order || 'ascend';
   let column = req.query.column || 'last_name';
   let page = req.query.page || 0;
-  let limit = req.query.pageSize || 20;
+  let limit = req.query.pageSize || 10;
   if(page != 0){
     page -= 1;
   }
@@ -41,7 +41,7 @@ router.get('/players', async (req, res) => {
           }
         }
       });
-      res.json(players);
+      res.json({ players, total: data.total });
     })
     .catch(err => {
       res.status(500).send(err);
