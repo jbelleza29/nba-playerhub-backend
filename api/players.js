@@ -1,17 +1,19 @@
-const express = require('express')
-const router = express.Router()
+const express = require('express');
+const { raw, fn } = require('objection');
+const router = express.Router();
 
-const Player = require('../models/Player')
+const Player = require('../models/Player');
 const orderMap = {
   'ascend': 'asc',
   'descend': 'desc'
-}
+};
 
 router.get('/players', async (req, res) => {
   let order = req.query.order || 'ascend';
   let column = req.query.column || 'last_name';
   let page = req.query.page || 0;
   let limit = req.query.pageSize || 10;
+  let filter = req.query.filter || '';
   if(page != 0){
     page -= 1;
   }
@@ -19,6 +21,9 @@ router.get('/players', async (req, res) => {
   Player.query()
     .select('*')
     .join('teams', 'players.team', '=', 'teams.id')
+    .where('players.first_name', 'ilike', `%${filter}%`)
+    .orWhere('players.last_name', 'ilike', `%${filter}%`)
+    .orWhere('teams.full_name', 'ilike', `%${filter}%`)
     .page(page, limit)
     .orderBy(column, orderMap[order])
     .then(data => {
