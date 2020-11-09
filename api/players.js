@@ -2,14 +2,49 @@ const express = require('express')
 const router = express.Router()
 
 const Player = require('../models/Player')
+const orderMap = {
+  'ascend': 'asc',
+  'descend': 'desc'
+}
 
-router.get('/players', (req, res) => {
+router.get('/players', async (req, res) => {
+  let order = req.query.order || 'ascend';
+  let column = req.query.column || 'last_name';
+  let page = req.query.page || 0;
+  let limit = req.query.pageSize || 20;
+  if(page != 0){
+    page -= 1;
+  }
+
   Player.query()
-    .then(players => {
-      res.json(players)
+    .select('*')
+    .join('teams', 'players.team', '=', 'teams.id')
+    .page(page, limit)
+    .orderBy(column, orderMap[order])
+    .then(data => {
+      const players = data.results.map((player) => {
+        return {
+          id: player.id,
+          first_name: player.first_name,
+          last_name: player.last_name,
+          height_feet: player.height_feet,
+          height_inches: player.height_inches,
+          weight_pounds: player.weight_pounds,
+          position: player.position,
+          team: {
+            name: player.name,
+            abbreviation: player.abbreviation,
+            full_name: player.full_name,
+            divison: player.division,
+            city: player.city,
+            conference: player.conference
+          }
+        }
+      });
+      res.json(players);
     })
     .catch(err => {
-      console.log(err);
+      res.status(500).send(err);
     })
 })
 
