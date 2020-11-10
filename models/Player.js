@@ -9,7 +9,7 @@ class Player extends Model {
   }
 
   static get idColumn() {
-    return 'id';
+    return 'player_id';
   }
 
   static get relationMappings() {

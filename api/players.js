@@ -28,8 +28,9 @@ router.get('/players', async (req, res) => {
     .orderBy(column, orderMap[order])
     .then(data => {
       const players = data.results.map((player) => {
+        console.log(player);
         return {
-          id: player.id,
+          player_id: player.player_id,
           first_name: player.first_name,
           last_name: player.last_name,
           height_feet: player.height_feet,
@@ -77,6 +78,7 @@ router.post('/players', (req, res) => {
 router.put('/players/:id', (req, res) => {
   const id = req.params.id;
 
+  console.log(req.body, id);
   Player.query()
     .patchAndFetchById(id, req.body)
     .then(player => {

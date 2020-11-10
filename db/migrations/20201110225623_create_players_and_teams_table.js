@@ -11,7 +11,7 @@ exports.up = function(knex) {
     table.string('city');
   })
   .createTable('players', (table) => {
-    table.increments('id');
+    table.increments('player_id');
     table.string('first_name').notNullable();
     table.string('last_name').notNullable();
     table.decimal('height_feet');
